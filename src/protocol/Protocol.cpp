@@ -108,6 +108,13 @@ void Protocol::startNewAction(QString description, QImage* img)
     _currentStep = new ProtocolStep(description, img);
 }
 
+void Protocol::setCurrentActionDescription(QString description)
+{
+    if (_currentStep) {
+        _currentStep->setDescription(description);
+    }
+}
+
 void Protocol::endAction()
 {
 

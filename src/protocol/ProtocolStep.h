@@ -71,6 +71,8 @@ public:
 		 */
     QString description();
 
+    void setDescription(QString description);
+
     /**
 		 * \brief returns the steps Image.
 		 */

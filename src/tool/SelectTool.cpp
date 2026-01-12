@@ -23,6 +23,7 @@
 #include "../midi/MidiFile.h"
 #include "../protocol/Protocol.h"
 #include "StandardTool.h"
+#include "Selection.h"
 
 SelectTool::SelectTool(int type)
     : EventTool()
@@ -153,6 +154,15 @@ bool SelectTool::release()
     y_rect = 0;
 
     protocol(toCopy, this);
+
+    int noteCount = 0;
+    foreach (MidiEvent* event, Selection::instance()->selectedEvents()) {
+        if (dynamic_cast<NoteOnEvent*>(event)) {
+            noteCount++;
+        }
+    }
+    file()->protocol()->setCurrentActionDescription("Selection changed (" + QString::number(noteCount) + " notes)");
+
     file()->protocol()->endAction();
     if (_standardTool) {
         Tool::setCurrentTool(_standardTool);

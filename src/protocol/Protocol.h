@@ -89,6 +89,8 @@ public:
 		 */
     void endAction();
 
+    void setCurrentActionDescription(QString description);
+
     /**
 		 * \brief returns the number of ProtocolSteps on the undo stack.
 		 */
