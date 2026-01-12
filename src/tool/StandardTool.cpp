@@ -23,6 +23,7 @@
 #include "SizeChangeTool.h"
 
 #include "../MidiEvent/MidiEvent.h"
+#include "../MidiEvent/NoteOnEvent.h"
 #include "../gui/MatrixWidget.h"
 #include "../midi/MidiFile.h"
 #include "../protocol/Protocol.h"
@@ -149,6 +150,15 @@ bool StandardTool::press(bool leftClick)
                     ProtocolEntry* toCopy = copy();
                     EventTool::selectEvent(event, !Selection::instance()->selectedEvents().contains(event));
                     protocol(toCopy, this);
+
+                    int noteCount = 0;
+                    foreach (MidiEvent* event, Selection::instance()->selectedEvents()) {
+                        if (dynamic_cast<NoteOnEvent*>(event)) {
+                            noteCount++;
+                        }
+                    }
+                    file()->protocol()->setCurrentActionDescription("Selection changed (" + QString::number(noteCount) + " notes)");
+
                     file()->protocol()->endAction();
                 }
                 Tool::setCurrentTool(sizeChangeTool);
@@ -163,6 +173,15 @@ bool StandardTool::press(bool leftClick)
                     ProtocolEntry* toCopy = copy();
                     EventTool::selectEvent(event, !Selection::instance()->selectedEvents().contains(event));
                     protocol(toCopy, this);
+
+                    int noteCount = 0;
+                    foreach (MidiEvent* event, Selection::instance()->selectedEvents()) {
+                        if (dynamic_cast<NoteOnEvent*>(event)) {
+                            noteCount++;
+                        }
+                    }
+                    file()->protocol()->setCurrentActionDescription("Selection changed (" + QString::number(noteCount) + " notes)");
+
                     file()->protocol()->endAction();
                 }
 					if(QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier)){

@@ -90,6 +90,15 @@ void SelectionNavigator::navigate(qreal searchAngle)
     Protocol* protocol = file->protocol();
     protocol->startNewAction("Tweak selection");
     EventTool::selectEvent(newSelectedEvent, true);
+
+    int noteCount = 0;
+    foreach (MidiEvent* event, Selection::instance()->selectedEvents()) {
+        if (dynamic_cast<NoteOnEvent*>(event)) {
+            noteCount++;
+        }
+    }
+    protocol->setCurrentActionDescription("Tweak selection (" + QString::number(noteCount) + " notes)");
+
     protocol->endAction();
     mainWindow->updateAll();
 }

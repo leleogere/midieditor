@@ -1906,13 +1906,18 @@ void MainWindow::selectAllFromChannel(QAction* action)
     file->protocol()->startNewAction("Select all events from channel " + QString::number(channel));
     EventTool::clearSelection();
     file->channel(channel)->setVisible(true);
+    int noteCount = 0;
     foreach (MidiEvent* e, file->channel(channel)->eventMap()->values()) {
         if (e->track()->hidden()) {
             e->track()->setHidden(false);
         }
         EventTool::selectEvent(e, false);
+        if (dynamic_cast<NoteOnEvent*>(e)) {
+            noteCount++;
+        }
     }
 
+    file->protocol()->setCurrentActionDescription("Select all events from channel " + QString::number(channel) + " (" + QString::number(noteCount) + " notes)");
     file->protocol()->endAction();
 }
 
@@ -1927,14 +1932,19 @@ void MainWindow::selectAllFromTrack(QAction* action)
     file->protocol()->startNewAction("Select all events from track " + QString::number(track));
     EventTool::clearSelection();
     file->track(track)->setHidden(false);
+    int noteCount = 0;
     for (int channel = 0; channel < 16; channel++) {
         foreach (MidiEvent* e, file->channel(channel)->eventMap()->values()) {
             if (e->track()->number() == track) {
                 file->channel(e->channel())->setVisible(true);
                 EventTool::selectEvent(e, false);
+                if (dynamic_cast<NoteOnEvent*>(e)) {
+                    noteCount++;
+                }
             }
         }
     }
+    file->protocol()->setCurrentActionDescription("Select all events from track " + QString::number(track) + " (" + QString::number(noteCount) + " notes)");
     file->protocol()->endAction();
 }
 
@@ -1947,12 +1957,17 @@ void MainWindow::selectAll()
 
     file->protocol()->startNewAction("Select all");
 
+    int noteCount = 0;
     for (int i = 0; i < 16; i++) {
         foreach (MidiEvent* event, file->channel(i)->eventMap()->values()) {
             EventTool::selectEvent(event, false, true);
+            if (dynamic_cast<NoteOnEvent*>(event)) {
+                noteCount++;
+            }
         }
     }
 
+    file->protocol()->setCurrentActionDescription("Select all (" + QString::number(noteCount) + " notes)");
     file->protocol()->endAction();
 }
 
